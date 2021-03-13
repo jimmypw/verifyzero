@@ -10,7 +10,7 @@ func showhelp() {
 }
 
 func verifyZero(file os.File) (bool, error) {
-	var buf []byte
+	var buf = make([]byte, 1024*1000*10) // 10MB
 
 	for {
 		readlen, err := file.Read(buf)
