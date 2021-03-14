@@ -56,6 +56,8 @@ func main() {
 		os.Exit(2)
 	}
 
+	file.Close()
+
 	if result {
 		exitstatus = 0
 	} else {
