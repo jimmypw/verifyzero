@@ -7,7 +7,7 @@ import (
 )
 
 func showhelp() {
-	os.Stderr.WriteString("Usage: verifyzero /path/to/file\n")
+	os.Stderr.WriteString("Usage: ./verifyzero /path/to/file\n")
 }
 
 func verifyZero(file os.File) (bool, bool) {
@@ -62,18 +62,19 @@ func verifyZero(file os.File) (bool, bool) {
 // 1 success (with read errors)
 // 2 fail (target is not empty)
 // 3 fail (target is not empty and there was an error)
+// 10 Fatal Error
 func main() {
 	if len(os.Args) < 2 {
 		showhelp()
-		os.Exit(2)
+		os.Exit(10)
 	}
 	path := os.Args[1]
-	exitstatus := 3
+	exitstatus := 10
 
 	file, err := os.Open(path)
 	if err != nil {
 		os.Stderr.Write([]byte(err.Error()))
-		os.Exit(2)
+		os.Exit(10)
 	}
 
 	iszeroized, haserrors := verifyZero(*file)
