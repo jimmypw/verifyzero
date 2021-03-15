@@ -10,6 +10,7 @@ Exit Statuses
   1. Success, the file is zeroized however parts of it were unreadable due to errors.
   2. Fail, non 0 bytes are contained within the file.
   3. Fail, the disk is not empty and read errors were detected. 
+  10. Fatal Error
 
 # Zeroizing a disk
 

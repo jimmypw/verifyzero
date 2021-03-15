@@ -23,24 +23,24 @@ func verifyZero(file os.File) (bool, bool) {
 			} else {
 				haserrors = true
 				os.Stderr.WriteString(err.Error())
-				// Testing shows that upon error file.Read does not seek forward. I therefore need to
-				// step through the file until i identify the exact block that is causing the problem
-				// then step over it. However this algorithm will be ineffienent so until I can think
-				// of a way to do this properly I'll Seek foward 10MB and report the range where the
-				// Error Occoured
-				curpos, err := file.Seek(0, os.SEEK_CUR)
+				// Testing shows that upon error file.Read does not seek forward by the full len(buf)
+				// On read error. I think it reads up to the error but I am not confident and this
+				// suspicion will require furthur testing. Instead, after a read error I will seek
+				// forward 1024 bytes and attempt the read again, while reporting each time that
+				// an error has been encountered and the affected byte range.
+				curpos, err := file.Seek(0, os.SEEK_CUR) // Get the current position
 				if err != nil {
 					os.Stderr.WriteString(err.Error())
-					os.Exit(2)
+					os.Exit(10)
 				}
 
-				newpos, err := file.Seek(1024*1000*10, os.SEEK_CUR) // 10MB
+				newpos, err := file.Seek(1024, os.SEEK_CUR) // seek forward 1K
 				if err != nil {
 					os.Stderr.WriteString(err.Error())
-					os.Exit(2)
+					os.Exit(10)
 				}
 
-				os.Stderr.WriteString(fmt.Sprintf("Error reading between offset %d-%d\n", curpos, newpos))
+				os.Stderr.WriteString(fmt.Sprintf(": reading between offset %d-%d\n", curpos, newpos))
 
 				continue
 			}
@@ -68,7 +68,7 @@ func main() {
 		os.Exit(2)
 	}
 	path := os.Args[1]
-	exitstatus := 2
+	exitstatus := 3
 
 	file, err := os.Open(path)
 	if err != nil {
