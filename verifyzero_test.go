@@ -11,10 +11,8 @@ func TestVerifyZero(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 
-	status, err := verifyZero(*file)
-	if err != nil {
-		t.Fatalf(err.Error())
-	}
+	status, _ := verifyZero(*file)
+
 	if status == false {
 		t.Fail()
 	}
@@ -26,10 +24,7 @@ func TestVerifyNotZero(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 
-	status, err := verifyZero(*file)
-	if err != nil {
-		t.Fatalf(err.Error())
-	}
+	status, _ := verifyZero(*file)
 
 	if status == true {
 		t.Fail()
